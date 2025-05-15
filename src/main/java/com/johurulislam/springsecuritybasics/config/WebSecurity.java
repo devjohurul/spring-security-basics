@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -19,11 +20,6 @@ public class WebSecurity {
     public WebSecurity(CustomerUserDetailsService customerUserDetailsService) {
         this.customerUserDetailsService = customerUserDetailsService;
     }
-    @Bean
-    @SuppressWarnings("deprecation")
-    PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
-    }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -35,7 +31,7 @@ public class WebSecurity {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(antMatcher("/login/**")).permitAll()
                         .requestMatchers(antMatcher("/register-user")).permitAll()
-                        .requestMatchers(antMatcher("/register-admin")).hasRole("ADMIN")
+                       .requestMatchers(antMatcher("/register-admin")).hasRole("ADMIN")
                         .requestMatchers(antMatcher("/user-dashboard")).hasAnyRole("USER", "ADMIN")
                         .requestMatchers(antMatcher("/admin-dashboard")).hasRole("ADMIN")
                         .requestMatchers(antMatcher("/login.css")).permitAll()
